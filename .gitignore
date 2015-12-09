@@ -55,3 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Exclude Non public databases
+SF1_*.csv
