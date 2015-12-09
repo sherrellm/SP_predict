@@ -59,3 +59,4 @@ target/
 # Exclude Non public databases
 SF1_*.csv
 test.csv
+pivot.csv
