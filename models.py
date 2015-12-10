@@ -4,6 +4,7 @@ from Quandl_eda import read_pivot
 
 def load_data():
 	df= read_pivot()
+	df['date'] = pd.to_datetime(df['date'], infer_datetime_format=True)
 	columns=['date', 'ticker', 'ACCOCI_ARQ',
    'ASSETSAVG_ART', 'ASSETSC_ARQ','ASSETSNC_ARQ', 'ASSETS_ARQ',
    'ASSETTURNOVER_ART', 'BVPS_ARQ','CAPEX_ARQ', 
@@ -29,7 +30,10 @@ def load_data():
    'SHARESWA_ARQ',  'SPS_ART','TANGIBLES_ARQ', 'TAXEFFICIENCY_ART',
    'TAXEXP_ARQ','TBVPS_ARQ', 'WORKINGCAPITAL_ARQ' ]
 	
-	return df[columns].set_index('date')
+	df=df[columns]
+	df=pd.pivot_table(df,index=['date','ticker'], columns=df.columns,values=df.columns)
+
+	return df 
 
 if __name__ == '__main__':
 	df=load_data()

@@ -19,19 +19,12 @@ def load_database():
 	return df 
 
 def process_database(df):
-	print "processing"
 	df['ticker'] = df['ticker_metric'].apply(lambda x: x.split('_',1)[0])
-	print "1st split"
 	df['metric'] = df['ticker_metric'].apply(lambda x: x.split('_',1)[1])
-	print "2nd split done "
 	df=df.drop('ticker_metric', axis=1)
-	print "droped"
-	# df['date'] = pd.to_datetime(df['date'],format="%Y-%M-%d")
-
-	# df['date'] = pd.DatetimeIndex(df['date'])
-	print "pivot in "
 	df=pd.pivot_table(df,index=['date','ticker'], columns='metric',values='value')
 	return df
+
 def save_pivot(df):
 	df.to_csv("data/pivot.csv")
 
@@ -42,7 +35,4 @@ def read_pivot():
 if __name__ == '__main__':
 	df = load_database()
 	df = process_database(df)
-	df.info()
-	print df.head(50)
-	# print df.columns
 	save_pivot(df)
