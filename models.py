@@ -3,38 +3,9 @@ import numpy as np
 from Quandl_eda import read_pivot
 
 def load_data():
-	df= read_pivot()
-	df['date'] = pd.to_datetime(df['date'], infer_datetime_format=True)
-	columns=['date', 'ticker', 'ACCOCI_ARQ',
-   'ASSETSAVG_ART', 'ASSETSC_ARQ','ASSETSNC_ARQ', 'ASSETS_ARQ',
-   'ASSETTURNOVER_ART', 'BVPS_ARQ','CAPEX_ARQ', 
-   'CASHNEQ_ARQ', 'COR_ARQ', 'CURRENTRATIO_ARQ','DEBT_ARQ', 
-   'DEPAMOR_ARQ','DE_ARQ', 'DILUTIONRATIO_ARQ',
-   'DIVYIELD', 'DPS_ARQ','EBITDAMARGIN_ART', 'EBITDA_ARQ',
-   'EBIT_ARQ','EBT_ARQ','EPSDILGROWTH1YR_ART',  'EPSDIL_ARQ', 
-   'EPSGROWTH1YR_ART',  'EPS_ARQ', 'EQUITYAVG_ART',  'EQUITY_ARQ', 'EV',
-   'EVEBITDA_ART',  'EVEBIT_ART',  'EVENT','FCFPS_ARQ', 'FCF_ARQ',  
-   'FILINGDATE', 'FILINGTYPE', 'GP_ARQ','GROSSMARGIN_ART',
-   'INTANGIBLES_ARQ', 'INTERESTBURDEN_ART','INTEXP_ARQ', 
-   'INVCAPAVG_ART','INVCAP_ARQ', 'INVENTORY_ARQ','LEVERAGERATIO_ART', 
-   'LIABILITIESC_ARQ', 'LIABILITIESNC_ARQ', 'LIABILITIES_ARQ',
-   'MARKETCAP', 'NCFCOMMON_ARQ', 'NCFDEBT_ARQ','NCFDIV_ARQ', 
-   'NCFF_ARQ','NCFI_ARQ','NCFOGROWTH1YR_ART',  'NCFO_ARQ', 'NCFX_ARQ',
-   'NCF_ARQ','NETINCCMN_ARQ','NETINCDIS_ARQ','NETINCGROWTH1YR_ART', 
-   'NETINC_ARQ','NETMARGIN_ART', 'PAYABLES_ARQ','PAYOUTRATIO_ART', 'PB_ARQ',
-   'PE1_ART','PE_ART', 'PREFDIVIS_ARQ',
-   'PRICE', 'PS1_ART',  'PS_ART', 'RECEIVABLES_ARQ',  'RETEARN_ARQ', 
-   'REVENUEGROWTH1YR_ART', 'REVENUE_ARQ','RND_ARQ','ROA_ART', 'ROE_ART', 
-   'ROIC_ART',  'ROS_ART',  'SGNA_ARQ',
-   'SHAREFACTOR', 'SHARESBAS', 'SHARESWADIL_ARQ', 'SHARESWAGROWTH1YR_ART', 
-   'SHARESWA_ARQ',  'SPS_ART','TANGIBLES_ARQ', 'TAXEFFICIENCY_ART',
-   'TAXEXP_ARQ','TBVPS_ARQ', 'WORKINGCAPITAL_ARQ' ]
-	
-	df=df[columns]
-	df=pd.pivot_table(df,index=['date','ticker'], columns=df.columns,values=df.columns)
-
-	return df 
+   df=load_quarterly()
+   return df 
 
 if __name__ == '__main__':
-	df=load_data()
+	df = load_data()
 
