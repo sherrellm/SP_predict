@@ -63,7 +63,10 @@ def generate_quarterly(df):
 	df = df[columns]
 	df = df.set_index('date')
 	df['quarter'] = df.index.to_period('Q')
-	df.groupby(['quarter', 'ticker']).mean()
+
+	df = df.groupby(['quarter', 'ticker']).mean()
+	df = df.set_index(['ticker','quarter'])
+	# df = df.fillna('ffill')
 	df.to_csv("data/quarterly.csv")
 
 def load_quarterly():
