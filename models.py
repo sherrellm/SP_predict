@@ -6,6 +6,13 @@ def load_data():
    df=load_quarterly()
    return df 
 
+def fill_na():
+   pass
+
+def cross_val():
+   pass
+
+
 if __name__ == '__main__':
 	df = load_data()
 
