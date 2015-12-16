@@ -75,11 +75,17 @@ def load_quarterly():
 
 def load_changes():
 	df = pd.read_csv("data/S_P_500_changes.csv")
+
 	df['Remove Date'] = pd.to_datetime(df['Remove Date'], infer_datetime_format=True)
-	df['Annoucment Date'] = pd.to_datetime(df['Annoucment Date'], infer_datetime_format=True)
+	df = df.set_index('Remove Date')
+	df['Quarter_removed'] =  df.index.to_period('Q')
+	df['Announcement Date'] = pd.to_datetime(df['Announcement Date'], infer_datetime_format=True)
+	df = df.set_index('Announcement Date')
+	df['Quarter_Annouced'] =  df.index.to_period('Q')
 	df['Add Date'] = pd.to_datetime(df['Add Date'], infer_datetime_format=True)
-	df.set_index('Remove Date')
-	# df['quarter'] = df['Remove Date'].to_period('Q')
+	df = df.set_index('Add Date')
+	df['Quarter_Added'] =  df.index.to_period('Q')
+	df.reset_index()
 	return df 
 
 def join_dfs(quartely, changes):
