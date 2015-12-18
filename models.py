@@ -9,10 +9,14 @@ def load_data():
 def fill_na():
    pass
 
-def cross_val():
+def cross_val(X,y):
+
+
    pass
 
 
 if __name__ == '__main__':
-	df = load_data()
+	quarterly = load_data()
+   changes = load_changes()
+   df = join_dfs(quartely, changes)
 
