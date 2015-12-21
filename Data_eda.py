@@ -75,9 +75,8 @@ def load_quarterly():
 
 def load_changes():
 	df = pd.read_csv("data/S_P_500_changes.csv")
-
-	df['Remove Date'] = pd.to_datetime(df['Remove Date'], infer_datetime_format=True)
-	df = df.set_index('Remove Date')
+	df['Remove_Date'] = pd.to_datetime(df['Remove Date'], infer_datetime_format=True)
+	df = df.set_index('Remove_Date')
 	df['Quarter_removed'] =  df.index.to_period('Q')
 	df['Announcement Date'] = pd.to_datetime(df['Announcement Date'], infer_datetime_format=True)
 	df = df.set_index('Announcement Date')
@@ -85,7 +84,7 @@ def load_changes():
 	df['Add Date'] = pd.to_datetime(df['Add Date'], infer_datetime_format=True)
 	df = df.set_index('Add Date')
 	df['Quarter_Added'] =  df.index.to_period('Q')
-	df.reset_index()
+	# df = df.reset_index()y
 	return df 
 
 def join_dfs(quartely, changes):
@@ -94,14 +93,24 @@ def join_dfs(quartely, changes):
 	pass
 def generate_sp_membership_list():
 	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values.tolist()
+	membership_list = set(membership_list[0])
 	df=load_changes()
+	print df.head()
+	quarter=df['Quarter_Added'].iloc[0]
+	# for i,row in enumerate(df):
+		
+
+
 	# return [(quarter, membership_list.remove(row[1]).add(row[0]) ) for row in df for quarter in df['Quarter_Added']]
-	return [(quarter.value, row.split(',')[0]) for i,row in enumerate(df) for quarter in df['Quarter_Added']]
+	# return [(df['Quarter_Added'].iloc[i], membership_list ) for i,row in enumerate(df)] 
+	# return [row for i,row in enumerate(membership_list)]
+	return df 
 if __name__ == '__main__':
 	# df = load_database()
 	# df = process_database(df)
 	# save_pivot(df)
 	# generate_quarterly(df)
 	# df = load_changes()
-	membership_list = generate_sp_membership_list()
-	
+	# membership_list = generate_sp_membership_list()
+	df = generate_sp_membership_list()
+	# print membership_list
