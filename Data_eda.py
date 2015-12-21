@@ -95,8 +95,8 @@ def join_dfs(quartely, changes):
 def generate_sp_membership_list():
 	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values.tolist()
 	df=load_changes()
-	return [(quarter, membership_list.remove(row['Stock Removed'].value).add(row['Stock Added'].value) ) for row in df['Quarter_Added'] == quarter  for quarter in df['Quarter_Added']]
-
+	# return [(quarter, membership_list.remove(row[1]).add(row[0]) ) for row in df for quarter in df['Quarter_Added']]
+	return [(quarter.value, row.split(',')[0]) for i,row in enumerate(df) for quarter in df['Quarter_Added']]
 if __name__ == '__main__':
 	# df = load_database()
 	# df = process_database(df)
