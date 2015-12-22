@@ -1,0 +1,2 @@
+Predicting removal of stocks from the S&P 500
+I am building a model that predicts when stocks will be removed from the S&P 500. Multiple machine learning techniques such as random forest and ARIMA are evaluated as potential models. The S&P 500 removes stocks from it index depending on factors such as its market cap and due to merger and acquisition activity. 
