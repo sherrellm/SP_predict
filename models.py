@@ -1,6 +1,6 @@
 import pandas as pd 
 import numpy as np 
-from Data_eda import create_SP_500_member_df
+from Data_eda import create_SP_500_member_df, load_changes
 
 def load_data():
    df = create_SP_500_member_df()
@@ -9,16 +9,20 @@ def load_data():
 def fill_na(df,val):
    return df.fill_na(val=val)
 
-def cross_val(X,y,model_name):
-   for period in xrange(df.index.unique().ordinal-1):
-      # X_train, y_train =  split_data(df[df.mask(df[df.index.ordinal= period]))
-      # X_test, y_test =  split_data(df[df.mask(df[.index.ordinal = period+1]))
+def cross_val(df, model_name):
+   df = df.reset_index(drop=True)
+   changes=load_changes()
+   for period in xrange(changes.Quarter_removed.min().ordinal, changes.Quarter_removed.max().ordinal-1):
+      X_train, y_1 =  split_data(df[df.quarter == period])
+      X_test, y2 =  split_data(df[df.quarter == period+1])
+      print X_train.shape
       model = model_name(X_train,X_test,y_train,y_test)
+
 
    return model 
 
 def split_data(df):
-   y = df.pop('SP_500_member', inplace=True).values
+   y = df.pop('SP_500_member').values
    X = df.values 
    return X, y 
 
@@ -41,7 +45,7 @@ def random_forest(X_train,X_test,y_train,y_test):
    model = RandomForestClassifier(n_estimators=2000, n_jobs=-1)
    model.fit(X_train,y_train)
    y_pred = model.predict(X_test)
-   score(y_pred,y_test,"Random Forest")
+   cross_val_score(y_pred,y_test,"Random Forest")
    return model
 
 
@@ -49,7 +53,7 @@ def gradient_boost(X_train,X_test,y_train,y_test):
    model = GradientBoostingClassifier(learning_rate=0.001, n_estimators=1000, subsample=.7)
    model.fit(X_train,y_train)
    y_pred = model.predict(X_test)
-   score(y_pred,y_test, "Gradient Boost")
+   cross_val_score(y_pred,y_test, "Gradient Boost")
    return model 
 
 def load_model_pickle(filename):
@@ -64,13 +68,16 @@ def pickle_model(model,model_name):
 
 def main():
    data = load_data()
+   model = cross_val(data, random_forest)
+   changes=load_changes()
+   print changes.Quarter_removed.min().ordinal
 
-   return data
-
+   return data 
 
 
 if __name__ == '__main__':
-   data = main()
+   df = main()
+
 	
 
 
