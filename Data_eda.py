@@ -96,36 +96,38 @@ def join_dfs():
 
 def generate_sp_membership_list():
 	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values.flatten().tolist()
-	# membership_list = set(membership_list)
+	membership_list = set(membership_list)
 	df=load_changes()
-	# quarter=df['Quarter_Added'].iloc[0]
-	q=load_quarterly()
 	df = df.set_index('Quarter_Added')
-	q['SP_500_member'] = 0
-	# print "entering loop"
-	# for i,row in enumerate(q):
-	# 	print "test"
-	# 	if q['ticker'].iloc[i] in membership_list:
-	# 		q['SP_500_member'].iloc[i] = 1
-	# 		print "success"
-
-	# return [(quarter, membership_list.remove(row[1]).add(row[0]) ) for row in df for quarter in df['Quarter_Added']]
-	# return [(df['Quarter_Added'].iloc[i], membership_list.remove(row.[1]).add(row[0])) for i,row in enumerate(df['Quarter_Added'].unique())] 
-
-
-	# return [(df['Quarter_Added'].iloc[i], row) for i,row in enumerate(df['Quarter_Added'].unique())] 
 	# create a list of quarter and all stocks in sp&500 set to fourth quarter 2015 
-	quarter_membership_lists = [(df.index.unique()[i], membership_list) for i,row in enumerate(df.index.unique())] 
-	for i, quarter in enumerate(df.index.unique()):
+	quarter_membership_lists = [membership_list  for i,row in enumerate(df.index.unique())] 
+	quarter_order = df.index.unique().values.flatten().tolist()
+	for i, q in enumerate(df.index.unique()):
 		for k, row in enumerate(df.values):
 			#we want to add and remove tickers from membership in the s&p 500 if the period is greater then or equal to the current period
-			for i >= quarter_membership_lists.index(row[-1]):
-				quarter_membership_lists[i][1] = (row[-1], membership_list.remove(row[1]).add(row[0]))
+			# quarter_membership_lists[0] = quarter_order.index(row[-1].ordinal)
+			print row[1]
+			for x in xrange(i , quarter_order.index(row[-1].ordinal)):
+				try:
+					quarter_membership_lists[x].remove(row[2])
+					break
+				except KeyError:
+					pass
 
-	# return [row for i,row in enumerate(membership_list)]
-	# return [Q,]
-	# return  membership_list
-	return df, quarter_membership_lists
+				try:
+					quarter_membership_lists[x].add(row[1])
+					break
+				except KeyError:
+					pass
+			pass	
+	# check integrity of changes 
+	# print quarter_membership_lists[0] == membership_list
+	return quarter_order , quarter_membership_lists
+
+def create_SP_500_member(df,quarter_membership_lists):
+	q=load_quarterly()
+	q['SP_500_member'] = 0
+	pass
 
 if __name__ == '__main__':
 	# df = load_database()
