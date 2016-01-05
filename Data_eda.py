@@ -128,10 +128,12 @@ def generate_sp_membership_list():
 def create_SP_500_member_df():
 	quarter_order, quarter_membership_lists = generate_sp_membership_list()
 	df = load_quarterly()
-	df['SP_500_member'] = 0
+	SP_500_member = np.zeros((df.shape[0],1))
 	for i, row in df.iterrows():
-		if row['ticker'] in quarter_membership_lists[quarter_order.index(row['quarter'].ordinal)]:
-			df['SP_500_member'].iloc[i] = 1 
+		if row['quarter'].ordinal in quarter_order:
+			if row['ticker'] in quarter_membership_lists[quarter_order.index(row['quarter'].ordinal)]:
+				SP_500_member[i.to_period('Q').ordinal] = 1 
+	df['SP_500_member'] = SP_500_member
 	return df 
 
 if __name__ == '__main__':
@@ -141,4 +143,6 @@ if __name__ == '__main__':
 	# generate_quarterly(df)
 	# df = load_changes()
 	# membership_list = generate_sp_membership_list()
-	quarter_order, quarter_membership_lists = generate_sp_membership_list()
+	# quarter_order, quarter_membership_lists = generate_sp_membership_list()
+	df = create_SP_500_member_df()
+	print df.head()
