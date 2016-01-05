@@ -98,7 +98,7 @@ HO,RX,2/22/2010,2/26/2010,2/26/2010,Merger,Energy,Health Care
 QEP,STR,6/23/2010,6/30/2010,6/30/2010,Spin Off,Energy,Utilities
 IR,PTV,11/10/2010,11/26/2010,11/26/2010,Merger,Materials,Materials
 TYC,SII,8/19/2010,8/26/2010,8/26/2010,Merger,Industrials,
-ACE,MIL,7/8/2010,7/14/2010,7/14/2014,Merger,FInancials,
+ACE,MIL,7/8/2010,7/14/2010,7/14/2010,Merger,FInancials,
 CERN,BJS,3/19/2010,4/29/2010,4/29/2010,Merger,Health Care,
 MJN,MBI,12/11/2009,12/19/2009,12/19/2009,Spin Off,Consumer Staples,Financials
 V,CIEN,12/11/2009,12/19/2009,12/19/2009,Market Cap,Information Technolgy,Information Technolgy
@@ -113,7 +113,7 @@ ROP,ESV,12/15/2009,12/22/2009,12/22/2009,Redomesticated,Industrials,Energy
 DNR,ROH,3/25/2009,4/1/2009,4/1/2009,Merger,Energy,Materials
 HRL,ACAS,2/24/2009,3/3/2009,3/3/2009,Market Cap,Consumer Staples,Financials
 VTR,JNY,2/24/2009,3/3/2009,3/3/2009,Market Cap,Financials,Consumer Discretionary
-PCS,TYC,6/22/2009,6/25/2009,6/29/2029,Redomesticated,Information Technolgy,Telecommunication Services
+PCS,TYC,6/22/2009,6/25/2009,6/29/2009,Redomesticated,Information Technolgy,Telecommunication Services
 FMC,CTX,8/11/2009,8/18/2009,8/18/2009,Merger,Materials,Consumer Discretionary
 PCLN,SGP,10/29/2009,11/6/2009,11/6/2009,Merger,Materials,Health Care
 DO,WFT,2/13/2009,2/26/2009,2/26/2009,Redomesticated,Energy,Energy
@@ -145,4 +145,4 @@ CAM,HET,1/17/2008,1/28/2008,1/28/2008,Market Cap,Health Care,Consumer Discretion
 ISR,BSC,5/22/2008,5/30/2008,5/30/2008,Merger,Health Care,Financials
 PBCT,UIS,11/7/2008,11/10/2008,11/10/2008,Market Cap,Financials,Information Technolgy
 AKS,CFC,6/26/2008,6/30/2008,6/30/2008,Merger,Materials,Financials
-MFE,BRL,12/18/2009,,,Merger,Information Technolgy,Health Care
+MFE,BRL,12/18/2009,12/18/2009,12/18/2009,Merger,Information Technolgy,Health Care
