@@ -84,27 +84,36 @@ def load_changes():
 	df['Add Date'] = pd.to_datetime(df['Add Date'], infer_datetime_format=True)
 	df = df.set_index('Add Date')
 	df['Quarter_Added'] =  df.index.to_period('Q')
-	# df = df.reset_index()y
+	df = df.reset_index()
 	return df 
 
-def join_dfs(quartely, changes):
-	quartely.join(changes, on=ticker)
+def join_dfs():
+	quartely = load_quarterly()
+	changes = load_changes()
+	changes['ticker'] = changes['Stock Added']
+	return quartely.join(changes, on='ticker',rsuffix='changes')
 
-	pass
 def generate_sp_membership_list():
-	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values.tolist()
-	membership_list = set(membership_list[0])
+	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values
+	# membership_list = set(membership_list)
 	df=load_changes()
-	print df.head()
-	quarter=df['Quarter_Added'].iloc[0]
-	# for i,row in enumerate(df):
-		
 
+	# quarter=df['Quarter_Added'].iloc[0]
+	q=load_quarterly()
+	q['SP_500_member'] = 0
+	# for i,row in enumerate(df):
+	# 	if df['ticker'].iloc[i] in membership_list:
+	# 		df['SP_500_member'].iloc[i] = 1
 
 	# return [(quarter, membership_list.remove(row[1]).add(row[0]) ) for row in df for quarter in df['Quarter_Added']]
 	# return [(df['Quarter_Added'].iloc[i], membership_list ) for i,row in enumerate(df)] 
 	# return [row for i,row in enumerate(membership_list)]
-	return df 
+
+	# return [Q,]
+
+	return df, membership_list
+
+
 if __name__ == '__main__':
 	# df = load_database()
 	# df = process_database(df)
@@ -112,5 +121,5 @@ if __name__ == '__main__':
 	# generate_quarterly(df)
 	# df = load_changes()
 	# membership_list = generate_sp_membership_list()
-	df = generate_sp_membership_list()
-	# print membership_list
+	df, mem = generate_sp_membership_list()
+	df = join_dfs()
