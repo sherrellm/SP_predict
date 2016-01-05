@@ -71,9 +71,10 @@ def generate_quarterly(df):
 
 def load_quarterly():
 	df = pd.read_csv("data/quarterly.csv")
-	df['quarter'] = pd.to_datetime(df['quarter'], infer_datetime_format=True)
-	df = df.set_index('quarter')
-	df['quarter'] =  df.index.to_period('Q')
+	# df = df.reset_index(drop=True)
+	# df['quarter'] = pd.to_datetime(df['quarter'], infer_datetime_format=True)
+	# df = df.set_index('quarter')
+	# df['quarter'] =  df.index.to_period('Q')
 	return df 
 
 def load_changes():
