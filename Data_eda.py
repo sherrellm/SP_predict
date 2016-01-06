@@ -65,16 +65,14 @@ def generate_quarterly(df):
 	df['quarter'] = df.index.to_period('Q')
 
 	df = df.groupby(['quarter', 'ticker']).mean()
-	# df = df.set_index(['ticker','quarter'])
-	# df = df.fillna('ffill')
 	df.to_csv("data/quarterly.csv")
 
 def load_quarterly():
 	df = pd.read_csv("data/quarterly.csv")
-	# df = df.reset_index(drop=True)
-	# df['quarter'] = pd.to_datetime(df['quarter'], infer_datetime_format=True)
-	# df = df.set_index('quarter')
-	# df['quarter'] =  df.index.to_period('Q')
+	df = df.reset_index(drop=True)
+	df['quarter'] = pd.to_datetime(df['quarter'], infer_datetime_format=True)
+	df = df.set_index('quarter')
+	df['quarter'] =  df.index.to_period('Q')
 	return df 
 
 def load_changes():
@@ -100,7 +98,6 @@ def join_dfs():
 
 def generate_sp_membership_list():
 	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values.flatten().tolist()
-	# membership_list = set(membership_list)
 	df = load_changes()
 	df = df.set_index('Quarter_Added')
 	# create a list of quarter and all stocks in sp&500 set to fourth quarter 2015 
@@ -109,7 +106,6 @@ def generate_sp_membership_list():
 	for i, q in enumerate(df.index.unique()):
 		for k, row in enumerate(df.values):
 			#we want to add and remove tickers from membership in the s&p 500 if the period is greater then or equal to the current period
-			# print row[1]
 			for x in xrange(i , quarter_order.index(row[-1].ordinal)):
 				try:
 					quarter_membership_lists[x].remove(row[2])
@@ -130,6 +126,7 @@ def create_SP_500_member_df():
 	quarter_order, quarter_membership_lists = generate_sp_membership_list()
 	df = load_quarterly()
 	SP_500_member = np.zeros((df.shape[0],1))
+	print df['quarter']
 	for i, row in df.iterrows():
 		if row['quarter'].ordinal in quarter_order:
 			if row['ticker'] in quarter_membership_lists[quarter_order.index(row['quarter'].ordinal)]:
@@ -146,4 +143,5 @@ if __name__ == '__main__':
 	# membership_list = generate_sp_membership_list()
 	# quarter_order, quarter_membership_lists = generate_sp_membership_list()
 	df = create_SP_500_member_df()
-	print df.head()
+	#  print df.head()
+
