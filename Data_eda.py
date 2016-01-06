@@ -5,6 +5,7 @@ from Quandl import Quandl
 auth_tok = None
 
 def get_stock(ticker):
+
 	df = Quandl.get("SF1/{}".format(ticker), authtoken=auth_tok, trim_start="2007-12-30", returns="pandas")
 	print df.info()
 	return df 
@@ -93,7 +94,6 @@ def join_dfs():
 	quartely = load_quarterly()
 	changes = load_changes()
 	changes['ticker'] = changes['Stock Added']
-	print df.head()
 	return quartely.join(changes, on='ticker',rsuffix='changes')
 
 def generate_sp_membership_list():
@@ -126,11 +126,11 @@ def create_SP_500_member_df():
 	quarter_order, quarter_membership_lists = generate_sp_membership_list()
 	df = load_quarterly()
 	SP_500_member = np.zeros((df.shape[0],1))
-	print df['quarter']
+	df = df.reset_index(drop=True)
 	for i, row in df.iterrows():
 		if row['quarter'].ordinal in quarter_order:
 			if row['ticker'] in quarter_membership_lists[quarter_order.index(row['quarter'].ordinal)]:
-				SP_500_member[i.to_period('Q').ordinal] = 1 
+				SP_500_member[i] = 1 
 	df['SP_500_member'] = SP_500_member
 	return df 
 
