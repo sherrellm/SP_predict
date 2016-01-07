@@ -1,25 +1,20 @@
 import pandas as pd 
 import numpy as np 
-from Quandl import Quandl
 
-auth_tok = None
-
-def get_stock(ticker):
-
-	df = Quandl.get("SF1/{}".format(ticker), authtoken=auth_tok, trim_start="2007-12-30", returns="pandas")
-	print df.info()
-	return df 
 
 def load_constiuents():
+	''' Loads S&P 500 members as of 2015-12-09'''
 	df=pd.read_csv("data/S&P_comp_20151209")
 	return df 
 
 def load_database():
+	''' Loads sharadar sf1 core us fundamentals from csv'''
 	df=pd.read_csv("data/SF1_20151209.csv")
 	df.columns= ['ticker_metric','date','value']
 	return df 
 
 def process_database(df):
+	'''Process the shardar sf1 database to a usable form and pivots'''
 	df['ticker'] = df['ticker_metric'].apply(lambda x: x.split('_',1)[0])
 	df['metric'] = df['ticker_metric'].apply(lambda x: x.split('_',1)[1])
 	df=df.drop('ticker_metric', axis=1)
@@ -27,13 +22,16 @@ def process_database(df):
 	return df
 
 def save_pivot(df):
+	'''saves the pivot of the dataframe'''
 	df.to_csv("data/pivot.csv")
 
 def read_pivot():
+	'''returns the dataframe object of the pivoted data frame'''
 	df = pd.read_csv("data/pivot.csv")
 	return df 
 
 def generate_quarterly(df):
+	'''Resamples the data frame to quarterly frequency'''
 	df = read_pivot()
 	df['date'] = pd.to_datetime(df['date'], infer_datetime_format=True)
 	columns = ['date', 'ticker', 'ACCOCI_ARQ',
@@ -69,6 +67,7 @@ def generate_quarterly(df):
 	df.to_csv("data/quarterly.csv")
 
 def load_quarterly():
+	''' loads the quartley data frame'''
 	df = pd.read_csv("data/quarterly.csv")
 	df = df.reset_index(drop=True)
 	df['quarter'] = pd.to_datetime(df['quarter'], infer_datetime_format=True)
@@ -77,6 +76,7 @@ def load_quarterly():
 	return df 
 
 def load_changes():
+	''' loads the changes to the S&P 500 '''
 	df = pd.read_csv("data/S_P_500_changes.csv")
 	df['Remove_Date'] = pd.to_datetime(df['Remove Date'], infer_datetime_format=True)
 	df = df.set_index('Remove_Date')
@@ -90,13 +90,9 @@ def load_changes():
 	df = df.reset_index()
 	return df 
 
-def join_dfs():
-	quartely = load_quarterly()
-	changes = load_changes()
-	changes['ticker'] = changes['Stock Added']
-	return quartely.join(changes, on='ticker',rsuffix='changes')
 
 def generate_sp_membership_list():
+	''' generates the list of S&P 500 membership by quarter'''
 	membership_list = pd.read_csv('data/S&P_comp_20151209', header=None).values.flatten().tolist()
 	df = load_changes()
 	df = df.set_index('Quarter_Added')
@@ -123,6 +119,7 @@ def generate_sp_membership_list():
 	return quarter_order, quarter_membership_lists
 
 def create_SP_500_member_df():
+	'''Creates the data frame that will be used for modeling with the column SP_500_member ==1 to when the stock is a member'''
 	quarter_order, quarter_membership_lists = generate_sp_membership_list()
 	df = load_quarterly()
 	SP_500_member = np.zeros((df.shape[0],1))
