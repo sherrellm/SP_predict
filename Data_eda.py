@@ -73,6 +73,7 @@ def load_quarterly():
 	df['quarter'] = pd.to_datetime(df['quarter'], infer_datetime_format=True)
 	df = df.set_index('quarter')
 	df['quarter'] =  df.index.to_period('Q')
+	# df['quarter'] = [row.index.ordinal for i,row in df.iterrows()]
 	return df 
 
 def load_changes():
@@ -124,12 +125,33 @@ def create_SP_500_member_df():
 	df = load_quarterly()
 	SP_500_member = np.zeros((df.shape[0],1))
 	df = df.reset_index(drop=True)
+
+	
+
 	for i, row in df.iterrows():
 		if row['quarter'].ordinal in quarter_order:
 			if row['ticker'] in quarter_membership_lists[quarter_order.index(row['quarter'].ordinal)]:
 				SP_500_member[i] = 1 
 	df['SP_500_member'] = SP_500_member
+
+	items_added=0
+	rows_added_dict = {'quarter':{},'ticker':{},'SP_500_member':{}}
+	for quarter in df.quarter.unique():
+		for ticker in df.ticker.unique():
+				if ticker not in  df[df.quarter == quarter].ticker.values:
+					rows_added_dict['quarter'].update({items_added:quarter.ordinal})
+					rows_added_dict['ticker'].update({items_added:ticker})
+					rows_added_dict['SP_500_member'].update({items_added:0})
+					items_added+=1
+
+	df = pd.concat([df,pd.from_dict(rows_added_dict)])
+
+
+
+
+
 	return df 
+
 
 if __name__ == '__main__':
 	# df = load_database()
@@ -137,6 +159,7 @@ if __name__ == '__main__':
 	# save_pivot(df)
 	# generate_quarterly(df)
 	# df = load_changes()
+	# df = load_quarterly()
 	# membership_list = generate_sp_membership_list()
 	# quarter_order, quarter_membership_lists = generate_sp_membership_list()
 	df = create_SP_500_member_df()

@@ -53,9 +53,9 @@ def calculate_changes(y1,y2,y3,tick1,tick2,tick3,tickers):
    Output: The training labels, testing labels and the associated tickers
    '''
    #represent all tickers in the current and prevoius quarter so y_test and y_train have the same shape
-   tickers = set(tick1)
-   tickers.intersection(tick2)
-   tickers.intersection(tick3)
+   # tickers = set(tick1)
+   # tickers.intersection(tick2)
+   # tickers.intersection(tick3)
    tickers = list(tickers)
    y_train = np.zeros(len(tickers)).flatten().tolist()
    y_test = np.zeros(len(tickers)).flatten().tolist()
