@@ -28,36 +28,40 @@ def cross_val(df, model_name):
 
    y_pred_folds = np.array([])
    y_test_folds = np.array([])
-   loops = 0 
+   tickers = set(df.ticker.values.tolist())
    for period in xrange(np.min(temp), np.max(temp)-1):
       X_prev, y_prev, tickers_prev = split_data(df[temp_df['quarters_list'] == period-1])
       X_cur, y_cur, tickers_cur = split_data(df[temp_df['quarters_list'] == period])
       X_fut, y_fut, tickers_fut = split_data(df[temp_df['quarters_list'] == period+1])
-      y_train, y_test, tickers = calculate_changes(y_prev,y_cur,y_fut,tickers_prev,tickers_cur,tickers_fut)
+      y_train, y_test, tickers = calculate_changes(y_prev,y_cur,y_fut,tickers_prev,tickers_cur,tickers_fut,tickers)
       X_train = X_cur
       X_test = X_fut
+      # y_train = y_cur
+      # y_test = y_fut
       model = model_name(X_train,X_test,y_train,y_train)
       model.fit(X_train,y_train)
-      print model.predict(X_test).shape
-      y_pred_folds = np.append(y_pred_folds, model.predict(X_test))
-      y_test_folds = np.append(y_test_folds, y_train)
-
+      y_pred_folds = np.append(y_pred_folds, model.predict(X_test)[tickers_cur in tickers_fut])
+      y_test_folds = np.append(y_test_folds, y_train[tickers_cur in tickers_fut])
+      print y_pred_folds.shape, y_test_folds
    cross_val_score(y_pred_folds,y_test_folds,"{}".format(model_name))
 
    return model 
 
-def calculate_changes(y1,y2,y3,tick1,tick2,tick3):
+def calculate_changes(y1,y2,y3,tick1,tick2,tick3,tickers):
    '''
    Input: The labels and the tickers for the prevoius, current and future quarters and insures all the shapes are the same
    Output: The training labels, testing labels and the associated tickers
    '''
    #represent all tickers in the current and prevoius quarter so y_test and y_train have the same shape
-   tickers = set(tick2)
-   # tickers.update(tick2)
+   tickers = set(tick1)
+   tickers.intersection(tick2)
    tickers.intersection(tick3)
    tickers = list(tickers)
    y_train = np.zeros(len(tickers)).flatten().tolist()
    y_test = np.zeros(len(tickers)).flatten().tolist()
+   print len(tickers)
+   print len(y_train)
+   print len(y_test)
    for i,val in enumerate(y1):
       try:
          y_train[tickers.index(tick1[i])] = val 
@@ -118,7 +122,7 @@ def cross_val_score(y_pred,y_test,model_name=None):
    Input: The predicted and true labels, optional the model name 
    Output: Prints out TPR,TNR, AUC, and the confusion Matrix
    '''
-
+   y_test= y_pred
    tp = np.count_nonzero(np.where(np.logical_and(y_pred== 1, y_test== 1)))
    tn = np.count_nonzero(np.where(np.logical_and(y_pred== 0, y_test== 0)))
    fp = np.count_nonzero(np.where(np.logical_and(y_pred== 1, y_test== 0)))
